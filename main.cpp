@@ -1,3 +1,4 @@
+#include "adddialog.h"
 #include "bew.h"
 
 #include <QApplication>
@@ -32,8 +33,10 @@ int main(int argc, char *argv[])
     const auto args = parser.positionalArguments();
     if (args.isEmpty())
     {
-        parser.showHelp();
-        return 0;
+        AddDialog add;
+        add.show();
+
+        return app.exec();
     }
 
     auto web = args.at(0);

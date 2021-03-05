@@ -1,0 +1,5 @@
+<RCC>
+    <qresource prefix="/bew/templates">
+        <file>template.desktop</file>
+    </qresource>
+</RCC>
