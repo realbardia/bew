@@ -20,6 +20,9 @@ public:
 
     static QString homePath();
 
+    static QString userAgent();
+    static void setUserAgent(const QString &userAgent);
+
 public Q_SLOTS:
     void load(const QString &url);
 
@@ -34,5 +37,6 @@ protected:
 
 private:
     BewWebView *mWeb;
+    static QString mUserAgent;
 };
 #endif // BEW_H

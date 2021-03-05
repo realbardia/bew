@@ -10,6 +10,8 @@
 #include <QCoreApplication>
 #include <QMimeDatabase>
 
+QString Bew::mUserAgent;
+
 Bew::Bew(QWidget *parent)
     : QMainWindow(parent)
 {
@@ -140,6 +142,16 @@ void Bew::save()
 
     file.write(saveGeometry());
     file.close();
+}
+
+QString Bew::userAgent()
+{
+    return mUserAgent;
+}
+
+void Bew::setUserAgent(const QString &userAgent)
+{
+    mUserAgent = userAgent;
 }
 
 void Bew::downloadRequested(QWebEngineDownloadItem *download)

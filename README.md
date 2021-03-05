@@ -5,7 +5,7 @@
 Bew help you to convert Web apps to Desktop apps using below command:
 
 ```bash
-bew "https://twitter.com" --app-name "Twitter" --app-icon "/path/to/icon.png" --font "Ubuntu" --no-scrollbar 
+bew "https://twitter.com" --app-name "Twitter" --app-icon "/path/to/icon.png" --font "Ubuntu" --no-scrollbar --user-agent "Mozilla/5.0 (X11; Ubuntu; Linux x86_64; rv:86.0) Gecko/20100101 Firefox/86.0"
 ```
 
 ## Build

@@ -10,6 +10,7 @@
 BewWebView::BewWebView(QWidget *parent) :
     QWebEngineView(parent)
 {
+    page()->profile()->setHttpUserAgent(Bew::userAgent());
     connect(page(), &QWebEnginePage::featurePermissionRequested, this, [this](const QUrl &securityOrigin, QWebEnginePage::Feature feature){
         checkPermission(this, page(), securityOrigin, feature);
     });

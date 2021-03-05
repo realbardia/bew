@@ -19,10 +19,12 @@ int main(int argc, char *argv[])
     QCommandLineOption fontOption("font", "Set all fonts to <fontname>.", "fontname");
     QCommandLineOption titleOption("app-name", "Set app title to <name>.", "name");
     QCommandLineOption iconOption("app-icon", "Set app icon to <icon>.", "icon");
+    QCommandLineOption agentOption("user-agent", "Set browser user agent <string>.", "string");
 
     parser.addOption(titleOption);
     parser.addOption(iconOption);
     parser.addOption(fontOption);
+    parser.addOption(agentOption);
     parser.addOption(noScrollOption);
 
     parser.process(app);
@@ -40,11 +42,14 @@ int main(int argc, char *argv[])
     auto font = parser.value(fontOption);
     auto title = parser.value(titleOption);
     auto icon = parser.value(iconOption);
+    auto agent = parser.value(agentOption);
 
     if (title.count()) {
         app.setApplicationDisplayName(title);
         app.setApplicationName(title);
     }
+    if (agent.count())
+        Bew::setUserAgent(agent);
 
     Bew bew;
 
