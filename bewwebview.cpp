@@ -1,13 +1,21 @@
 #include "bewwebview.h"
 
+#include <QCoreApplication>
 #include <QDebug>
+#include <QMessageBox>
 
 BewWebView::BewWebView(QWidget *parent) :
     QWebEngineView(parent)
 {
     connect(this, &QWebEngineView::titleChanged, this, &BewWebView::on_webEngineView_urlChanged);
     connect(page(), &QWebEnginePage::featurePermissionRequested, this, [this](const QUrl &securityOrigin, QWebEnginePage::Feature feature){
-        page()->setFeaturePermission(securityOrigin, feature, QWebEnginePage::PermissionGrantedByUser);
+        QVariant var(feature);
+        var.convert(QVariant::String);
+
+        auto res = QMessageBox::warning(this, "Permission", QString("%1 needs below permission:\n%2").arg(QCoreApplication::applicationName()).arg(var.toString()),
+                                        QMessageBox::Ok, QMessageBox::Ok | QMessageBox::Discard);
+        if (res == QMessageBox::Ok)
+            page()->setFeaturePermission(securityOrigin, feature, QWebEnginePage::PermissionGrantedByUser);
     });
 }
 

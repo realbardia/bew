@@ -8,6 +8,7 @@
 #include <QFileDialog>
 #include <QStandardPaths>
 #include <QCoreApplication>
+#include <QMimeDatabase>
 
 Bew::Bew(QWidget *parent)
     : QMainWindow(parent)
@@ -67,8 +68,9 @@ void Bew::webViewCustomContextMenuRequested(const QPoint &)
     menu->clear();
     if (url.isValid())
     {
-        menu->addAction( tr("Open in new Window"), this, [page, url](){ page->triggerAction(QWebEnginePage::OpenLinkInNewWindow); } );
-        menu->addAction( tr("Open External"), this, [url](){ QDesktopServices::openUrl(url); } );
+        menu->addAction( tr("Open in new window"), this, [page, url](){ page->triggerAction(QWebEnginePage::OpenLinkInNewWindow); } );
+        menu->addAction( tr("Open external"), this, [url](){ QDesktopServices::openUrl(url); } );
+        menu->addAction( tr("Copy link"), this, [page, url](){ page->triggerAction(QWebEnginePage::CopyLinkToClipboard); } );
         menu->addSeparator();
     }
 
@@ -77,13 +79,31 @@ void Bew::webViewCustomContextMenuRequested(const QPoint &)
     menu->addAction( tr("Paste"), this, [page](){ page->triggerAction(QWebEnginePage::Paste); } )->setEnabled(data.editFlags() & QWebEngineContextMenuData::CanPaste);
 
     menu->addSeparator();
-    menu->addAction( tr("Select All"), this, [page](){ page->triggerAction(QWebEnginePage::SelectAll); } );
+    menu->addAction( tr("Select all"), this, [page](){ page->triggerAction(QWebEnginePage::SelectAll); } );
+
     if (media.isValid())
     {
         menu->addSeparator();
-        menu->addAction( tr("Download"), this, [page, url](){ page->triggerAction(QWebEnginePage::DownloadLinkToDisk); } );
-        menu->addAction( tr("Open External"), this, [url](){ QDesktopServices::openUrl(url); } );
+        switch (static_cast<int>(data.mediaType()))
+        {
+        case QWebEngineContextMenuData::MediaTypeImage:
+            menu->addAction( tr("Download image"), this, [page, url](){ page->triggerAction(QWebEnginePage::DownloadImageToDisk); } );
+            menu->addAction( tr("Copy image link"), this, [page, url](){ page->triggerAction(QWebEnginePage::CopyImageUrlToClipboard); } );
+            menu->addAction( tr("Copy image"), this, [page, url](){ page->triggerAction(QWebEnginePage::CopyImageToClipboard); } );
+            break;
+
+        default:
+            menu->addAction( tr("Download media"), this, [page, url](){ page->triggerAction(QWebEnginePage::DownloadMediaToDisk); } );
+            menu->addAction( tr("Copy media link"), this, [page, url](){ page->triggerAction(QWebEnginePage::CopyMediaUrlToClipboard); } );
+            break;
+        }
+        menu->addAction( tr("Open media external"), this, [url](){ QDesktopServices::openUrl(url); } );
     }
+
+    menu->addSeparator();
+    menu->addAction( tr("Back"), this, [page](){ page->triggerAction(QWebEnginePage::Back); } );
+    menu->addAction( tr("Forward"), this, [page](){ page->triggerAction(QWebEnginePage::Forward); } );
+    menu->addAction( tr("Reload"), this, [page](){ page->triggerAction(QWebEnginePage::Reload); } );
 
     menu->move( QCursor::pos() );
     menu->show();
@@ -124,14 +144,12 @@ void Bew::save()
 
 void Bew::downloadRequested(QWebEngineDownloadItem *download)
 {
-    QString url = download->url().toString();
-    int idx = url.indexOf("?");
-    if (idx > 0)
-        url = url.left(idx);
+    QString url = download->url().toString() + download->downloadFileName();
 
-    idx = url.lastIndexOf("/");
-    if (idx > 0)
-        url = url.mid(idx+1);
+    QMimeDatabase mdb;
+    auto suffixes = mdb.mimeTypeForName(download->mimeType()).suffixes();
+    if (suffixes.count())
+        url += "." + suffixes.first();
 
     QString path = QFileDialog::getSaveFileName(this, tr("Save file"), QStandardPaths::writableLocation(QStandardPaths::DownloadLocation) + "/" + url);
     if (path.isEmpty())

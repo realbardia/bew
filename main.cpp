@@ -42,8 +42,6 @@ int main(int argc, char *argv[])
     auto icon = parser.value(iconOption);
 
     if (title.count()) {
-        app.setOrganizationName("Aseman");
-        app.setOrganizationDomain("io.aseman");
         app.setApplicationDisplayName(title);
         app.setApplicationName(title);
     }
