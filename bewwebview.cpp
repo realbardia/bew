@@ -85,7 +85,7 @@ void BewWebView::checkPermission(QWebEngineView *view, QWebEnginePage *page, con
 {
     QString hash = QCryptographicHash::hash(securityOrigin.toString().toUtf8(), QCryptographicHash::Md5).toHex();
     QSettings settings(Bew::homePath() + "/permissions.ini", QSettings::IniFormat);
-    settings.setValue(hash + "/origin", securityOrigin);
+    settings.setValue(hash + "/origin", securityOrigin.toString());
 
     auto featureKey = hash + "/" + featureToKey(feature);
     switch (settings.value(featureKey, 0).toInt())
@@ -96,7 +96,7 @@ void BewWebView::checkPermission(QWebEngineView *view, QWebEnginePage *page, con
     case 0:
     {
         auto res = QMessageBox::warning(view, "Permission", featureToString(feature),
-                                        QMessageBox::Yes, QMessageBox::Yes | QMessageBox::No);
+                                        QMessageBox::Yes, QMessageBox::No);
         if (res == QMessageBox::Yes)
         {
             page->setFeaturePermission(securityOrigin, feature, QWebEnginePage::PermissionGrantedByUser);
