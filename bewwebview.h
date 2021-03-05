@@ -10,8 +10,10 @@ public:
     BewWebView(QWidget *parent = nullptr);
     virtual ~BewWebView();
 
-private Q_SLOTS:
-    void on_webEngineView_urlChanged(const QString &arg1);
+private:
+    QString featureToString(QWebEnginePage::Feature);
+    QString featureToKey(QWebEnginePage::Feature);
+    void checkPermission(QWebEngineView *view, QWebEnginePage *page, const QUrl &securityOrigin, QWebEnginePage::Feature feature);
 
 protected:
     virtual QWebEngineView *createWindow(QWebEnginePage::WebWindowType type);
