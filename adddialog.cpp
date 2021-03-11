@@ -39,9 +39,9 @@ void AddDialog::accept()
     if (!ui.scrollbar->isChecked())
         command += " --no-scrollbar";
     if (ui.useragent->text().length())
-        command += " --user-agent " + ui.useragent->text();
+        command += " --user-agent \"" + ui.useragent->text() + "\"";
     if (ui.font->currentText().length())
-        command += " --font " + ui.font->currentText();
+        command += " --font \"" + ui.font->currentText() + "\"";
 
     data.replace("%command%", command);
     data.replace("%icon%", ui.icon->text());
