@@ -45,15 +45,15 @@ void AddDialog::accept()
 
     if (ui.proxyGroup->isChecked())
     {
-        command += "--proxy-type \"" + ui.proxyType->currentText().toLower() + "\"";
+        command += " --proxy-type \"" + ui.proxyType->currentText().toLower() + "\"";
         if (ui.proxyHost->text().length())
-            command += "--proxy-host \"" + ui.proxyHost->text() + "\"";
+            command += " --proxy-host \"" + ui.proxyHost->text() + "\"";
         if (ui.proxyPort->value())
-            command += "--proxy-port \"" + QString::number(ui.proxyPort->value()) + "\"";
+            command += " --proxy-port \"" + QString::number(ui.proxyPort->value()) + "\"";
         if (ui.proxyUser->text().length())
-            command += "--proxy-username \"" + ui.proxyUser->text() + "\"";
+            command += " --proxy-username \"" + ui.proxyUser->text() + "\"";
         if (ui.proxyPass->text().length())
-            command += "--proxy-password \"" + ui.proxyPass->text() + "\"";
+            command += " --proxy-password \"" + ui.proxyPass->text() + "\"";
     }
 
     data.replace("%command%", command);
