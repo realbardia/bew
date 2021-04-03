@@ -24,7 +24,7 @@ int main(int argc, char *argv[])
     QCommandLineOption agentOption("user-agent", "Set browser user agent <string>.", "string");
     QCommandLineOption proxyHostOption("proxy-host", "Set proxy host <host>.", "host");
     QCommandLineOption proxyPortOption("proxy-port", "Set proxy port <port>.", "port");
-    QCommandLineOption proxyTypeOption("proxy-type", "Set proxy type (http|socks).", "type");
+    QCommandLineOption proxyTypeOption("proxy-type", "Set proxy type (http|socks|noproxy).", "type");
     QCommandLineOption proxyUserOption("proxy-username", "Set proxy username <username>.", "username");
     QCommandLineOption proxyPassOption("proxy-password", "Set proxy password <password>.", "password");
 
@@ -67,7 +67,15 @@ int main(int argc, char *argv[])
 
     if (proxyHost.length() || proxyType.length() || proxyPort)
     {
-        QNetworkProxy::ProxyType proxyTypeEnum = (proxyType == "socks"? QNetworkProxy::Socks5Proxy : QNetworkProxy::HttpProxy);
+        auto proxyTypeEnum = [proxyType]() -> QNetworkProxy::ProxyType {
+            if (proxyType == "noproxy")
+                return QNetworkProxy::NoProxy;
+            else
+            if (proxyType == "socks")
+                return QNetworkProxy::Socks5Proxy;
+            else
+                return QNetworkProxy::HttpProxy;
+        }();
         if (proxyHost.isEmpty())
             proxyHost = "127.0.0.1";
 
