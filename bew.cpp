@@ -9,11 +9,16 @@
 #include <QStandardPaths>
 #include <QCoreApplication>
 #include <QMimeDatabase>
+#include <QLocalSocket>
+#include <QBuffer>
+#include <QKeyEvent>
 
 QString Bew::mUserAgent;
 
 Bew::Bew(QWidget *parent)
-    : QMainWindow(parent)
+    : QMainWindow(parent),
+      mInstanceServer(Q_NULLPTR),
+      mSysTray(Q_NULLPTR)
 {
     QWebEngineSettings::defaultSettings()->setAttribute(QWebEngineSettings::PluginsEnabled, true);
 
@@ -146,14 +151,64 @@ void Bew::save()
     file.close();
 }
 
+void Bew::keyPressEvent(QKeyEvent *e)
+{
+    if (e->modifiers() & Qt::ControlModifier)
+    {
+        if (e->key() == Qt::Key_Q)
+            QCoreApplication::quit();
+    }
+}
+
 QString Bew::userAgent()
 {
     return mUserAgent;
 }
 
+QString Bew::instancePath()
+{
+    QByteArray bytes;
+    QDataStream stream(&bytes, QIODevice::WriteOnly);
+    stream << QDir::homePath();
+    stream << QCoreApplication::applicationFilePath();
+    stream << QCoreApplication::arguments();
+
+    auto res = QDir::tempPath() + "/bew-" + QCryptographicHash::hash(bytes, QCryptographicHash::Md5).toHex() + ".socket";
+    return res;
+}
+
 void Bew::setUserAgent(const QString &userAgent)
 {
     mUserAgent = userAgent;
+}
+
+bool Bew::showInstance()
+{
+    qRegisterMetaType<QLocalSocket::LocalSocketError>("QLocalSocket::LocalSocketError");
+
+    auto path = Bew::instancePath();
+    auto socket = new QLocalSocket;
+
+    QEventLoop loop;
+    bool error = false;
+
+    socket->connect(socket, &QLocalSocket::connected, socket, [&loop, &error, socket](){
+        socket->write("show");
+        socket->flush();
+        socket->close();
+        error = false;
+        loop.exit();
+    }, Qt::QueuedConnection);
+    socket->connect(socket, &QLocalSocket::errorOccurred, socket, [&loop, &error, path](){
+        error = true;
+        QLocalServer::removeServer(path);
+        loop.exit();
+    }, Qt::QueuedConnection);
+
+    socket->connectToServer(path);
+    loop.exec();
+
+    return !error;
 }
 
 void Bew::downloadRequested(QWebEngineDownloadItem *download)
@@ -179,4 +234,62 @@ void Bew::downloadRequested(QWebEngineDownloadItem *download)
 void Bew::setScrollBar(bool state)
 {
     mWeb->settings()->setAttribute(QWebEngineSettings::ShowScrollBars, state);
+}
+
+void Bew::setSystemTray(bool state)
+{
+    if ((mSysTray != Q_NULLPTR) == state)
+        return;
+
+    if (mSysTray) {
+        delete mSysTray;
+        mSysTray = Q_NULLPTR;
+    } else {
+
+        auto menu = new QMenu();
+        menu->addAction(tr("Show"), this, [this](){
+            show();
+            activateWindow();
+        });
+        menu->addAction(tr("Quit"), QCoreApplication::instance(), &QCoreApplication::quit);
+
+        mSysTray = new QSystemTrayIcon(this);
+        mSysTray->setIcon(windowIcon());
+        mSysTray->setContextMenu(menu);
+        mSysTray->show();
+
+        connect(mSysTray, &QSystemTrayIcon::activated, this, [this](){
+            setVisible(!isVisible());
+            activateWindow();
+        });
+    }
+}
+
+void Bew::setSingleInstance(bool state)
+{
+    if ((mInstanceServer != Q_NULLPTR) == state)
+        return;
+
+    if (mInstanceServer) {
+        delete mInstanceServer;
+        mInstanceServer = Q_NULLPTR;
+    } else {
+        auto path = Bew::instancePath();
+        QLocalServer::removeServer(path);
+
+        mInstanceServer = new QLocalServer(this);
+        mInstanceServer->listen(path);
+
+        connect(mInstanceServer, &QLocalServer::newConnection, this, [this](){
+            auto socket = mInstanceServer->nextPendingConnection();
+            connect(socket, &QLocalSocket::readyRead, this, [socket, this](){
+                auto data = socket->readAll();
+                if (data.toLower() == "show")
+                {
+                    show();
+                    activateWindow();
+                }
+            });
+        });
+    }
 }

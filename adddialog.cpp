@@ -38,6 +38,10 @@ void AddDialog::accept()
 
     if (!ui.scrollbar->isChecked())
         command += " --no-scrollbar";
+    if (ui.singleInstance->isChecked())
+        command += " --single-instance";
+    if (ui.systemTray->isChecked())
+        command += " --system-tray";
     if (ui.useragent->text().length())
         command += " --user-agent \"" + ui.useragent->text() + "\"";
     if (ui.font->currentText().length())

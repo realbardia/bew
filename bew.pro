@@ -1,6 +1,5 @@
 TARGET = bew
-QT += core gui webenginewidgets \
-    widgets
+QT += core gui webenginewidgets widgets network
 
 CONFIG += c++11
 

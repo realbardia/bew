@@ -7,7 +7,7 @@
     <x>0</x>
     <y>0</y>
     <width>504</width>
-    <height>558</height>
+    <height>602</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -107,6 +107,34 @@
       <item row="1" column="1">
        <widget class="QFontComboBox" name="font">
         <property name="currentText">
+         <string/>
+        </property>
+       </widget>
+      </item>
+      <item row="3" column="0">
+       <widget class="QLabel" name="label_12">
+        <property name="text">
+         <string>Single Instance</string>
+        </property>
+       </widget>
+      </item>
+      <item row="4" column="0">
+       <widget class="QLabel" name="label_13">
+        <property name="text">
+         <string>SystemTray Icon</string>
+        </property>
+       </widget>
+      </item>
+      <item row="3" column="1">
+       <widget class="QCheckBox" name="singleInstance">
+        <property name="text">
+         <string/>
+        </property>
+       </widget>
+      </item>
+      <item row="4" column="1">
+       <widget class="QCheckBox" name="systemTray">
+        <property name="text">
          <string/>
         </property>
        </widget>

@@ -18,6 +18,8 @@ int main(int argc, char *argv[])
     parser.addPositionalArgument("web-url", "Web site url");
 
     QCommandLineOption noScrollOption("no-scrollbar", "No scrollbar");
+    QCommandLineOption sysTrayOption("system-tray", "Show on system tray");
+    QCommandLineOption singleInstanceOption("single-instance", "Only one instance must run");
     QCommandLineOption fontOption("font", "Set all fonts to <fontname>.", "fontname");
     QCommandLineOption titleOption("app-name", "Set app title to <name>.", "name");
     QCommandLineOption iconOption("app-icon", "Set app icon to <icon>.", "icon");
@@ -33,6 +35,8 @@ int main(int argc, char *argv[])
     parser.addOption(fontOption);
     parser.addOption(agentOption);
     parser.addOption(noScrollOption);
+    parser.addOption(sysTrayOption);
+    parser.addOption(singleInstanceOption);
 
     parser.addOption(proxyHostOption);
     parser.addOption(proxyPortOption);
@@ -54,6 +58,8 @@ int main(int argc, char *argv[])
     auto web = args.at(0);
 
     auto noScroll = parser.isSet(noScrollOption);
+    auto systray = parser.isSet(sysTrayOption);
+    auto singleInstance = parser.isSet(singleInstanceOption);
     auto font = parser.value(fontOption);
     auto title = parser.value(titleOption);
     auto icon = parser.value(iconOption);
@@ -64,6 +70,9 @@ int main(int argc, char *argv[])
     auto proxyPort = parser.value(proxyPortOption).toInt();
     auto proxyUser = parser.value(proxyUserOption);
     auto proxyPass = parser.value(proxyPassOption);
+
+    if (singleInstance && Bew::showInstance())
+        return 0;
 
     if (proxyHost.length() || proxyType.length() || proxyPort)
     {
@@ -102,6 +111,8 @@ int main(int argc, char *argv[])
     if (icon.count()) bew.setWindowIcon(QIcon(icon));
     if (font.count()) bew.setFonts(font);
     if (noScroll) bew.setScrollBar(false);
+    if (systray) bew.setSystemTray(true);
+    if (singleInstance) bew.setSingleInstance(true);
 
     bew.load(web);
     bew.show();
