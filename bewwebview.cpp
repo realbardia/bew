@@ -6,6 +6,7 @@
 #include <QMessageBox>
 #include <QSettings>
 #include <QCryptographicHash>
+#include <QWebEngineSettings>
 
 BewWebView::BewWebView(QWidget *parent) :
     QWebEngineView(parent)

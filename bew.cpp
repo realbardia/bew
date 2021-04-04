@@ -15,6 +15,8 @@ QString Bew::mUserAgent;
 Bew::Bew(QWidget *parent)
     : QMainWindow(parent)
 {
+    QWebEngineSettings::defaultSettings()->setAttribute(QWebEngineSettings::PluginsEnabled, true);
+
     mWeb = new BewWebView;
     mWeb->setContextMenuPolicy(Qt::CustomContextMenu);
 
