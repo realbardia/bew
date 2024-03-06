@@ -1,16 +1,53 @@
-#include "adddialog.h"
-#include "bew.h"
+#include "commandparser.h"
 
-#include <QApplication>
 #include <QCommandLineParser>
-#include <QNetworkProxy>
 
-int main(int argc, char *argv[])
+CommandParser::CommandParser() {}
+
+CommandParser::Result CommandParser::parse(const QString &command)
 {
-    QApplication app(argc, argv);
-    app.setApplicationName("bew");
-    app.setApplicationVersion("0.1");
+    QStringList arguments;
 
+    QString cache;
+    bool doubleQuotation = false;
+    bool quotation = false;
+    QChar lastChar;
+    for (const auto &c: command)
+    {
+        if (!doubleQuotation && c == '\'' && lastChar != '\\')
+        {
+            quotation = !quotation;
+            lastChar = c;
+            continue;
+        }
+        if (!quotation && c == '"' && lastChar != '\\')
+        {
+            doubleQuotation = !doubleQuotation;
+            lastChar = c;
+            continue;
+        }
+
+        if (quotation || doubleQuotation || c != ' ')
+        {
+            cache += c;
+            lastChar = c;
+            continue;
+        }
+        if (cache.isEmpty())
+            continue;
+
+        arguments << cache;
+        cache.clear();
+    }
+
+    if (cache.length())
+        arguments << cache;
+
+    return parse(arguments);
+}
+
+CommandParser::Result CommandParser::parse(const QStringList &arguments)
+{
     QCommandLineParser parser;
     parser.setApplicationDescription("Bew help you to convert Web apps to Desktop apps");
     parser.addHelpOption();
@@ -44,39 +81,40 @@ int main(int argc, char *argv[])
     parser.addOption(proxyUserOption);
     parser.addOption(proxyPassOption);
 
-    parser.process(app);
+    parser.parse(arguments);
 
     const auto args = parser.positionalArguments();
+
+    Result res;
     if (args.isEmpty())
+        return res;
+
+    res.isNull = false;
+    res.url = args.at(0);
+
+    res.noScroll = parser.isSet(noScrollOption);
+    res.systray = parser.isSet(sysTrayOption);
+    res.singleInstance = parser.isSet(singleInstanceOption);
+    res.font = parser.value(fontOption);
+    res.title = parser.value(titleOption);
+    res.icon = parser.value(iconOption);
+    res.agent = parser.value(agentOption);
+
+    res.proxyType = parser.value(proxyTypeOption);
+    res.proxyHost = parser.value(proxyHostOption);
+    res.proxyPort = parser.value(proxyPortOption).toInt();
+    res.proxyUser = parser.value(proxyUserOption);
+    res.proxyPass = parser.value(proxyPassOption);
+
+    return res;
+}
+
+std::optional<QNetworkProxy> CommandParser::Result::proxy() const
+{
+    auto host = proxyHost;
+    if (host.length() || proxyType.length() || proxyPort)
     {
-        AddDialog add;
-        add.show();
-
-        return app.exec();
-    }
-
-    auto web = args.at(0);
-
-    auto noScroll = parser.isSet(noScrollOption);
-    auto systray = parser.isSet(sysTrayOption);
-    auto singleInstance = parser.isSet(singleInstanceOption);
-    auto font = parser.value(fontOption);
-    auto title = parser.value(titleOption);
-    auto icon = parser.value(iconOption);
-    auto agent = parser.value(agentOption);
-
-    auto proxyType = parser.value(proxyTypeOption);
-    auto proxyHost = parser.value(proxyHostOption);
-    auto proxyPort = parser.value(proxyPortOption).toInt();
-    auto proxyUser = parser.value(proxyUserOption);
-    auto proxyPass = parser.value(proxyPassOption);
-
-    if (singleInstance && Bew::showInstance())
-        return 0;
-
-    if (proxyHost.length() || proxyType.length() || proxyPort)
-    {
-        auto proxyTypeEnum = [proxyType]() -> QNetworkProxy::ProxyType {
+        auto proxyTypeEnum = [this]() -> QNetworkProxy::ProxyType {
             if (proxyType == "noproxy")
                 return QNetworkProxy::NoProxy;
             else
@@ -85,37 +123,18 @@ int main(int argc, char *argv[])
             else
                 return QNetworkProxy::HttpProxy;
         }();
-        if (proxyHost.isEmpty())
-            proxyHost = "127.0.0.1";
+        if (host.isEmpty())
+            host = "127.0.0.1";
 
         QNetworkProxy proxy;
         proxy.setType(proxyTypeEnum);
-        proxy.setHostName(proxyHost);
+        proxy.setHostName(host);
         proxy.setPort(proxyPort);
         if (proxyUser.length()) proxy.setUser(proxyUser);
         if (proxyPass.length()) proxy.setPassword(proxyPass);
 
-        QNetworkProxy::setApplicationProxy(proxy);
+        return proxy;
     }
-
-    if (title.count()) {
-        app.setApplicationDisplayName(title);
-        app.setApplicationName(title);
-    }
-    if (agent.count())
-        Bew::setUserAgent(agent);
-
-    Bew bew;
-
-    if (title.count()) bew.setWindowTitle(title);
-    if (icon.count()) bew.setWindowIcon(QIcon(icon));
-    if (font.count()) bew.setFonts(font);
-    if (noScroll) bew.setScrollBar(false);
-    if (systray) bew.setSystemTray(true);
-    if (singleInstance) bew.setSingleInstance(true);
-
-    bew.load(web);
-    bew.show();
-
-    return app.exec();
+    else
+        return std::optional<QNetworkProxy>();
 }

@@ -1,4 +1,5 @@
 #include "bew.h"
+#include "bew_globals.h"
 
 #include <QUrl>
 #include <QWebEngineSettings>
@@ -13,7 +14,7 @@
 #include <QBuffer>
 #include <QKeyEvent>
 
-QString Bew::mUserAgent;
+QString Bew::mUserAgent = BEW_DEFAULT_USER_AGENT;
 
 Bew::Bew(QWidget *parent)
     : QMainWindow(parent),
@@ -227,7 +228,7 @@ void Bew::downloadRequested(QWebEngineDownloadItem *download)
         return;
     }
 
-    download->setPath(path);
+    download->setDownloadFileName(path);
     download->accept();
 }
 
