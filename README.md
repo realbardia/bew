@@ -1,22 +1,23 @@
-# Bew
+# BEW Store
 
 ## How to
 
-Bew help you to convert Web apps to Desktop web apps (bew) using a graphical User interface. Just run:
+BEW is a store and tool, help you to convert Web apps to Desktop web apps (bew) using a graphical User interface. Just run:
 
 ```bash
 bew
 ```
 
-But you can also run a desktop web app using below command:
+But you can also run it using command line:
 
 ```bash
-bew "https://twitter.com" --app-name "Twitter" --app-icon "/path/to/icon.png" --font "Ubuntu" --no-scrollbar --user-agent "Mozilla/5.0 (X11; Ubuntu; Linux x86_64; rv:86.0) Gecko/20100101 Firefox/86.0"
+bew install trello
+bew --help
 ```
 
 ## Build
 
-Bew needs QtWebEngine to build. So you must install it first:
+BEW needs QtWebEngine to build. So you must install it first:
 
 ```bash
 sudo apt install git g++ qtbase5-dev qtwebengine5-dev
@@ -27,7 +28,9 @@ and then just build it
 ```bash
 git clone git@github.com:realbardia/bew.git
 cd bew
-qmake
-make
+mkdir build && cd build
+cmake -DCMAKE_BUILD_TYPE=release -DCMAKE_INSTALL_PREFIX=/usr ..
+make -j4
 sudo make install
 ```
+
