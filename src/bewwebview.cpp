@@ -8,16 +8,16 @@
 #include <QCryptographicHash>
 #include <QWebEngineSettings>
 
-BewWebView::BewWebView(QWidget *parent) :
+BEWWebView::BEWWebView(QWidget *parent) :
     QWebEngineView(parent)
 {
-    page()->profile()->setHttpUserAgent(Bew::userAgent());
+    page()->profile()->setHttpUserAgent(BEW::userAgent());
     connect(page(), &QWebEnginePage::featurePermissionRequested, this, [this](const QUrl &securityOrigin, QWebEnginePage::Feature feature){
         checkPermission(this, page(), securityOrigin, feature);
     });
 }
 
-QString BewWebView::featureToString(QWebEnginePage::Feature feature)
+QString BEWWebView::featureToString(QWebEnginePage::Feature feature)
 {
     switch(static_cast<int>(feature))
     {
@@ -50,7 +50,7 @@ QString BewWebView::featureToString(QWebEnginePage::Feature feature)
     return QString();
 }
 
-QString BewWebView::featureToKey(QWebEnginePage::Feature feature)
+QString BEWWebView::featureToKey(QWebEnginePage::Feature feature)
 {
     switch(static_cast<int>(feature))
     {
@@ -83,10 +83,10 @@ QString BewWebView::featureToKey(QWebEnginePage::Feature feature)
     return QString();
 }
 
-void BewWebView::checkPermission(QWebEngineView *view, QWebEnginePage *page, const QUrl &securityOrigin, QWebEnginePage::Feature feature)
+void BEWWebView::checkPermission(QWebEngineView *view, QWebEnginePage *page, const QUrl &securityOrigin, QWebEnginePage::Feature feature)
 {
     QString hash = QCryptographicHash::hash(securityOrigin.toString().toUtf8(), QCryptographicHash::Md5).toHex();
-    QSettings settings(Bew::homePath() + "/permissions.ini", QSettings::IniFormat);
+    QSettings settings(BEW::homePath() + "/permissions.ini", QSettings::IniFormat);
     settings.setValue(hash + "/origin", securityOrigin.toString());
 
     auto featureKey = hash + "/" + featureToKey(feature);
@@ -117,7 +117,7 @@ void BewWebView::checkPermission(QWebEngineView *view, QWebEnginePage *page, con
     }
 }
 
-QWebEngineView *BewWebView::createWindow(QWebEnginePage::WebWindowType)
+QWebEngineView *BEWWebView::createWindow(QWebEnginePage::WebWindowType)
 {
     QWebEngineView *view = new QWebEngineView(this);
     view->setWindowFlag(Qt::Dialog);
@@ -135,7 +135,7 @@ QWebEngineView *BewWebView::createWindow(QWebEnginePage::WebWindowType)
     return view;
 }
 
-BewWebView::~BewWebView()
+BEWWebView::~BEWWebView()
 {
 
 }

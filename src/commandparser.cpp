@@ -49,7 +49,7 @@ CommandParser::Result CommandParser::parse(const QString &command)
 CommandParser::Result CommandParser::parse(const QStringList &arguments)
 {
     QCommandLineParser parser;
-    parser.setApplicationDescription("Bew help you to convert Web apps to Desktop apps");
+    parser.setApplicationDescription("BEW help you to convert Web apps to Desktop apps");
     parser.addHelpOption();
     parser.addVersionOption();
     parser.addPositionalArgument("web-url", "Web site url");

@@ -7,7 +7,7 @@
 
 #include <optional>
 
-class BewAppItem
+class BEWAppItem
 {
 public:
     struct Proxy {
@@ -18,8 +18,8 @@ public:
         QString pass;
     };
 
-    BewAppItem();
-    virtual ~BewAppItem();
+    BEWAppItem();
+    virtual ~BEWAppItem();
 
     QString title() const;
     void setTitle(const QString &newTitle);
@@ -81,6 +81,6 @@ private:
     std::optional<Proxy> mProxy;
 };
 
-typedef QSharedPointer<BewAppItem> BewAppItemPtr;
+typedef QSharedPointer<BEWAppItem> BEWAppItemPtr;
 
 #endif // BEWAPPITEM_H

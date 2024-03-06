@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <ui version="4.0">
- <class>BewShareDialog</class>
- <widget class="QDialog" name="BewShareDialog">
+ <class>BEWShareDialog</class>
+ <widget class="QDialog" name="BEWShareDialog">
   <property name="geometry">
    <rect>
     <x>0</x>
@@ -17,7 +17,7 @@
    <item>
     <widget class="QLabel" name="label">
      <property name="text">
-      <string>To share this Bew Application send below json text to the below Github projects as a issue or pull request.</string>
+      <string>To share this BEW Application send below json text to the below Github projects as a issue or pull request.</string>
      </property>
      <property name="wordWrap">
       <bool>true</bool>
@@ -59,7 +59,7 @@
   <connection>
    <sender>buttonBox</sender>
    <signal>accepted()</signal>
-   <receiver>BewShareDialog</receiver>
+   <receiver>BEWShareDialog</receiver>
    <slot>accept()</slot>
    <hints>
     <hint type="sourcelabel">
@@ -75,7 +75,7 @@
   <connection>
    <sender>buttonBox</sender>
    <signal>rejected()</signal>
-   <receiver>BewShareDialog</receiver>
+   <receiver>BEWShareDialog</receiver>
    <slot>reject()</slot>
    <hints>
     <hint type="sourcelabel">

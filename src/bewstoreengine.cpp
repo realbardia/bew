@@ -9,24 +9,24 @@
 #include <QNetworkAccessManager>
 #include <QJsonArray>
 
-BewStoreEngine::BewStoreEngine(QObject *parent)
+BEWStoreEngine::BEWStoreEngine(QObject *parent)
     : QObject{parent}
 {
 }
 
-BewStoreEngine::~BewStoreEngine()
+BEWStoreEngine::~BEWStoreEngine()
 {
 }
 
-void BewStoreEngine::refreshInstalleds(std::function<void (const QList<BewAppItemPtr> &)> callback)
+void BEWStoreEngine::refreshInstalleds(std::function<void (const QList<BEWAppItemPtr> &)> callback)
 {
-    const auto root = BewAppItem::applicationsPath();
+    const auto root = BEWAppItem::applicationsPath();
     auto runnable = QRunnable::create([this, callback, root](){
-        QList<BewAppItemPtr> res;
+        QList<BEWAppItemPtr> res;
 
         for (const auto &d: QDir(root).entryList({"*.desktop"}, QDir::Files))
         {
-            auto ptr = BewAppItemPtr::create();
+            auto ptr = BEWAppItemPtr::create();
             if (!ptr->restoreUsingFile(root + d))
                 continue;
 
@@ -42,7 +42,7 @@ void BewStoreEngine::refreshInstalleds(std::function<void (const QList<BewAppIte
     QThreadPool::globalInstance()->start(runnable);
 }
 
-void BewStoreEngine::refreshStore(std::function<void (const QList<BewAppItemPtr> &)> callback)
+void BEWStoreEngine::refreshStore(std::function<void (const QList<BEWAppItemPtr> &)> callback)
 {
     auto am = new QNetworkAccessManager(this);
 
@@ -52,11 +52,11 @@ void BewStoreEngine::refreshStore(std::function<void (const QList<BewAppItemPtr>
 
     auto reply = am->get(req);
     connect(reply, &QNetworkReply::finished, this, [reply, am, callback](){
-        QList<BewAppItemPtr> res;
+        QList<BEWAppItemPtr> res;
         auto array = QJsonDocument::fromJson(reply->readAll()).array();
         for (const auto &obj: array)
         {
-            auto item = BewAppItemPtr::create();
+            auto item = BEWAppItemPtr::create();
             if (!item->fromJson(obj.toObject()))
                 continue;
 
@@ -70,12 +70,12 @@ void BewStoreEngine::refreshStore(std::function<void (const QList<BewAppItemPtr>
     });
 }
 
-bool sort_BewAppItemPtr(const BewAppItemPtr &s1, const BewAppItemPtr &s2)
+bool sort_BEWAppItemPtr(const BEWAppItemPtr &s1, const BEWAppItemPtr &s2)
 {
     return s1->title().toLower() < s2->title().toLower();
 }
 
-void BewStoreEngine::sort(QList<BewAppItemPtr> &list)
+void BEWStoreEngine::sort(QList<BEWAppItemPtr> &list)
 {
-    std::sort(list.begin(), list.end(), sort_BewAppItemPtr);
+    std::sort(list.begin(), list.end(), sort_BEWAppItemPtr);
 }

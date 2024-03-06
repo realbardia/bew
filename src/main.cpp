@@ -50,7 +50,7 @@ int handleCommand(int argc, char *argv[])
 
     SettingsDialog::configureProxy();
 
-    BewStoreEngine engine;
+    BEWStoreEngine engine;
 
     switch (type)
     {
@@ -61,7 +61,7 @@ int handleCommand(int argc, char *argv[])
             return 0;
         }
         qDebug() << "Fetching store...";
-        engine.refreshStore([&app](const QList<BewAppItemPtr> &list){
+        engine.refreshStore([&app](const QList<BEWAppItemPtr> &list){
             QSet<QString> listToInstall;
             for (const auto &s: app.arguments().mid(2))
                 listToInstall.insert(s.toLower());
@@ -86,7 +86,7 @@ int handleCommand(int argc, char *argv[])
             return 0;
         }
         qDebug() << "Fetching locally installeds...";
-        engine.refreshStore([&app](const QList<BewAppItemPtr> &list){
+        engine.refreshStore([&app](const QList<BEWAppItemPtr> &list){
             QSet<QString> listToInstall;
             for (const auto &s: app.arguments().mid(2))
                 listToInstall.insert(s.toLower());
@@ -111,7 +111,7 @@ int handleCommand(int argc, char *argv[])
             return 0;
         }
         qDebug() << "Searching store...";
-        engine.refreshStore([&app](const QList<BewAppItemPtr> &list){
+        engine.refreshStore([&app](const QList<BEWAppItemPtr> &list){
             const auto keyword = app.arguments().last().toLower();
             for (const auto &ptr: list)
                 if (ptr->title().toLower().contains(keyword))
@@ -127,7 +127,7 @@ int handleCommand(int argc, char *argv[])
             return 0;
         }
         qDebug() << "Fetching store...";
-        engine.refreshStore([&app](const QList<BewAppItemPtr> &list){
+        engine.refreshStore([&app](const QList<BEWAppItemPtr> &list){
             for (const auto &ptr: list)
                 std::cout << " - " << ptr->title().toStdString() << ": " << ptr->url().toStdString() << std::endl;
             app.exit();
@@ -141,7 +141,7 @@ int handleCommand(int argc, char *argv[])
             return 0;
         }
         qDebug() << "Fetching locally installeds...";
-        engine.refreshInstalleds([&app](const QList<BewAppItemPtr> &list){
+        engine.refreshInstalleds([&app](const QList<BEWAppItemPtr> &list){
             for (const auto &ptr: list)
                 std::cout << " - " << ptr->title().toStdString() << ": " << ptr->url().toStdString() << std::endl;
             app.exit();
@@ -168,7 +168,7 @@ int main(int argc, char *argv[])
         return 0;
 
     QApplication app(argc, argv);
-    app.setApplicationName("bew");
+    app.setApplicationName("BEW");
     app.setApplicationVersion("0.1");
     app.setWindowIcon(QIcon(":/icons/bew.png"));
 
@@ -177,7 +177,7 @@ int main(int argc, char *argv[])
     auto parse = CommandParser::parse(app.arguments());
     if (parse.isNull)
     {
-        BewStore store;
+        BEWStore store;
         store.resize(1200, 700);
         store.refresh();
         store.show();
@@ -185,7 +185,7 @@ int main(int argc, char *argv[])
         return app.exec();
     }
 
-    if (parse.singleInstance && Bew::showInstance())
+    if (parse.singleInstance && BEW::showInstance())
         return 0;
 
     const auto proxy = parse.proxy();
@@ -197,9 +197,9 @@ int main(int argc, char *argv[])
         app.setApplicationName(parse.title);
     }
     if (parse.agent.count())
-        Bew::setUserAgent(parse.agent);
+        BEW::setUserAgent(parse.agent);
 
-    Bew bew;
+    BEW bew;
 
     if (parse.title.count()) bew.setWindowTitle(parse.title);
     if (parse.icon.count()) bew.setWindowIcon(QIcon(parse.icon));

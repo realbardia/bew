@@ -10,115 +10,115 @@
 #include <QProcess>
 #include <QRegularExpression>
 
-BewAppItem::BewAppItem()
+BEWAppItem::BEWAppItem()
 {
 }
 
-BewAppItem::~BewAppItem()
+BEWAppItem::~BEWAppItem()
 {
 }
 
-QString BewAppItem::title() const
+QString BEWAppItem::title() const
 {
     return mTitle;
 }
 
-void BewAppItem::setTitle(const QString &newTitle)
+void BEWAppItem::setTitle(const QString &newTitle)
 {
     mTitle = newTitle;
 }
 
-QString BewAppItem::iconUrl() const
+QString BEWAppItem::iconUrl() const
 {
     return mIconUrl;
 }
 
-void BewAppItem::setIconUrl(const QString &newIconUrl)
+void BEWAppItem::setIconUrl(const QString &newIconUrl)
 {
     mIconUrl = newIconUrl;
 }
 
-bool BewAppItem::isInstalled() const
+bool BEWAppItem::isInstalled() const
 {
-    return QFileInfo::exists(BewAppItem::path());
+    return QFileInfo::exists(BEWAppItem::path());
 }
 
-QString BewAppItem::path() const
+QString BEWAppItem::path() const
 {
     return applicationsPath() + mTitle + QStringLiteral(".desktop");
 }
 
-QString BewAppItem::url() const
+QString BEWAppItem::url() const
 {
     return mUrl;
 }
 
-void BewAppItem::setUrl(const QString &newUrl)
+void BEWAppItem::setUrl(const QString &newUrl)
 {
     mUrl = newUrl;
 }
 
-QString BewAppItem::userAgent() const
+QString BEWAppItem::userAgent() const
 {
     return mUserAgent;
 }
 
-void BewAppItem::setUserAgent(const QString &newUserAgent)
+void BEWAppItem::setUserAgent(const QString &newUserAgent)
 {
     mUserAgent = newUserAgent;
 }
 
-QString BewAppItem::fontFamily() const
+QString BEWAppItem::fontFamily() const
 {
     return mFontFamily;
 }
 
-void BewAppItem::setFontFamily(const QString &newFontFamily)
+void BEWAppItem::setFontFamily(const QString &newFontFamily)
 {
     mFontFamily = newFontFamily;
 }
 
-bool BewAppItem::scrollBar() const
+bool BEWAppItem::scrollBar() const
 {
     return mScrollBar;
 }
 
-void BewAppItem::setScrollBar(bool newScrollBar)
+void BEWAppItem::setScrollBar(bool newScrollBar)
 {
     mScrollBar = newScrollBar;
 }
 
-bool BewAppItem::singleInstance() const
+bool BEWAppItem::singleInstance() const
 {
     return mSingleInstance;
 }
 
-void BewAppItem::setSingleInstance(bool newSingleInstance)
+void BEWAppItem::setSingleInstance(bool newSingleInstance)
 {
     mSingleInstance = newSingleInstance;
 }
 
-bool BewAppItem::systemTray() const
+bool BEWAppItem::systemTray() const
 {
     return mSystemTray;
 }
 
-void BewAppItem::setSystemTray(bool newSystemTray)
+void BEWAppItem::setSystemTray(bool newSystemTray)
 {
     mSystemTray = newSystemTray;
 }
 
-std::optional<BewAppItem::Proxy> BewAppItem::proxy() const
+std::optional<BEWAppItem::Proxy> BEWAppItem::proxy() const
 {
     return mProxy;
 }
 
-void BewAppItem::setProxy(std::optional<BewAppItem::Proxy> newProxy)
+void BEWAppItem::setProxy(std::optional<BEWAppItem::Proxy> newProxy)
 {
     mProxy = newProxy;
 }
 
-QString BewAppItem::applicationsPath()
+QString BEWAppItem::applicationsPath()
 {
     static QString res;
     if (res.isEmpty())
@@ -129,7 +129,7 @@ QString BewAppItem::applicationsPath()
     return res;
 }
 
-QString BewAppItem::iconsPath()
+QString BEWAppItem::iconsPath()
 {
     static QString res;
     if (res.isEmpty())
@@ -140,12 +140,12 @@ QString BewAppItem::iconsPath()
     return res;
 }
 
-bool BewAppItem::restoreUsingAppName(const QString &appName)
+bool BEWAppItem::restoreUsingAppName(const QString &appName)
 {
     return restoreUsingFile(applicationsPath() + appName + QStringLiteral(".desktop"));
 }
 
-bool BewAppItem::restoreUsingFile(const QString &fileName)
+bool BEWAppItem::restoreUsingFile(const QString &fileName)
 {
     QFile f(fileName);
     if (!f.open(QFile::ReadOnly))
@@ -191,7 +191,7 @@ bool BewAppItem::restoreUsingFile(const QString &fileName)
     return true;
 }
 
-bool BewAppItem::install()
+bool BEWAppItem::install()
 {
     QFile file(":/bew/templates/template.desktop");
     if (!file.open(QFile::ReadOnly))
@@ -232,7 +232,7 @@ bool BewAppItem::install()
     data.replace("%icon%", mIconUrl);
     data.replace("%name%", mTitle);
 
-    file.setFileName(BewAppItem::path());
+    file.setFileName(BEWAppItem::path());
     file.open(QFile::WriteOnly);
     file.write(data.toUtf8());
     file.close();
@@ -241,23 +241,23 @@ bool BewAppItem::install()
     return true;
 }
 
-bool BewAppItem::launch()
+bool BEWAppItem::launch()
 {
     if (qgetenv("DESKTOP_SESSION").toLower().contains("plasma"))
-        QProcess::startDetached("kioclient5", {"exec", BewAppItem::path()});
+        QProcess::startDetached("kioclient5", {"exec", BEWAppItem::path()});
     else
         QProcess::startDetached("gtk-launch", {mTitle});
     return true;
 }
 
-bool BewAppItem::uninstall()
+bool BEWAppItem::uninstall()
 {
-    const auto res = QFile::remove(BewAppItem::path());
+    const auto res = QFile::remove(BEWAppItem::path());
     QProcess::startDetached("update-mime-database", QStringList());
     return res;
 }
 
-QJsonObject BewAppItem::toJson() const
+QJsonObject BEWAppItem::toJson() const
 {
     QJsonObject j;
     j["title"] = mTitle;
@@ -275,7 +275,7 @@ QJsonObject BewAppItem::toJson() const
     return j;
 }
 
-bool BewAppItem::fromJson(const QJsonObject &j)
+bool BEWAppItem::fromJson(const QJsonObject &j)
 {
 
     mTitle = j["title"].toString();
@@ -291,7 +291,7 @@ bool BewAppItem::fromJson(const QJsonObject &j)
     return mTitle.length();
 }
 
-bool BewAppItem::storeIcon(const QByteArray &iconBytes)
+bool BEWAppItem::storeIcon(const QByteArray &iconBytes)
 {
     if (mIconUrl.length() && QFileInfo::exists(mIconUrl))
         return true;
@@ -303,7 +303,7 @@ bool BewAppItem::storeIcon(const QByteArray &iconBytes)
         return false;
 
     const auto suffix = QString::fromUtf8(iconBytes.left(suffixSplitterIdx));
-    const auto path = BewAppItem::iconsPath() + mTitle + '.' + suffix;
+    const auto path = BEWAppItem::iconsPath() + mTitle + '.' + suffix;
 
     QFile f(path);
     if (!f.open(QFile::WriteOnly))
@@ -316,7 +316,7 @@ bool BewAppItem::storeIcon(const QByteArray &iconBytes)
     return true;
 }
 
-QByteArray BewAppItem::restoreIcon() const
+QByteArray BEWAppItem::restoreIcon() const
 {
     QByteArray res;
 

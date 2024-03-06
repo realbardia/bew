@@ -11,16 +11,16 @@
 #include <QTimer>
 
 namespace Ui {
-class BewStore;
+class BEWStore;
 }
 
-class BewStore : public QMainWindow
+class BEWStore : public QMainWindow
 {
     Q_OBJECT
 
 public:
-    explicit BewStore(QWidget *parent = nullptr);
-    ~BewStore();
+    explicit BEWStore(QWidget *parent = nullptr);
+    ~BEWStore();
 
 public Q_SLOTS:
     void reload();
@@ -32,15 +32,15 @@ private Q_SLOTS:
     void on_actionDonate_triggered();
 
 protected:
-    void refreshRequest(const BewAppItemPtr &from);
+    void refreshRequest(const BEWAppItemPtr &from);
 
 private:
-    Ui::BewStore *ui;
-    BewStoreEngine *mEngine;
+    Ui::BEWStore *ui;
+    BEWStoreEngine *mEngine;
     QLineEdit *mSearchLine;
 
-    QList<BewAppItemPtr> mInstalledBews;
-    QList<BewAppItemPtr> mStoreBews;
+    QList<BEWAppItemPtr> mInstalledBEWs;
+    QList<BEWAppItemPtr> mStoreBEWs;
 
     int mLoadingsCount = 0;
     QTimer *mRefreshTimer = nullptr;

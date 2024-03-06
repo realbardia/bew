@@ -4,16 +4,16 @@
 #include <QDialog>
 
 namespace Ui {
-class BewShareDialog;
+class BEWShareDialog;
 }
 
-class BewShareDialog : public QDialog
+class BEWShareDialog : public QDialog
 {
     Q_OBJECT
 
 public:
-    explicit BewShareDialog(QWidget *parent = nullptr);
-    ~BewShareDialog();
+    explicit BEWShareDialog(QWidget *parent = nullptr);
+    ~BEWShareDialog();
 
     void setJson(const QString &json);
 
@@ -21,7 +21,7 @@ private Q_SLOTS:
     void on_githubBtn_clicked();
 
 private:
-    Ui::BewShareDialog *ui;
+    Ui::BEWShareDialog *ui;
 };
 
 #endif // BEWSHAREDIALOG_H

@@ -4,24 +4,24 @@
 #include <QDesktopServices>
 #include <QUrl>
 
-BewShareDialog::BewShareDialog(QWidget *parent)
+BEWShareDialog::BEWShareDialog(QWidget *parent)
     : QDialog(parent)
-    , ui(new Ui::BewShareDialog)
+    , ui(new Ui::BEWShareDialog)
 {
     ui->setupUi(this);
 }
 
-BewShareDialog::~BewShareDialog()
+BEWShareDialog::~BEWShareDialog()
 {
     delete ui;
 }
 
-void BewShareDialog::setJson(const QString &json)
+void BEWShareDialog::setJson(const QString &json)
 {
     ui->json->setPlainText(json);
 }
 
-void BewShareDialog::on_githubBtn_clicked()
+void BEWShareDialog::on_githubBtn_clicked()
 {
     QDesktopServices::openUrl(QUrl("https://github.com/realbardia/bew"));
 }

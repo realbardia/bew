@@ -5,22 +5,22 @@
 #include "bewappitem.h"
 
 namespace Ui {
-class BewStoreItemWidget;
+class BEWStoreItemWidget;
 }
 
-class BewStoreItemWidget : public QWidget
+class BEWStoreItemWidget : public QWidget
 {
     Q_OBJECT
 
 public:
-    explicit BewStoreItemWidget(QWidget *parent = nullptr);
-    ~BewStoreItemWidget();
+    explicit BEWStoreItemWidget(QWidget *parent = nullptr);
+    ~BEWStoreItemWidget();
 
-    BewAppItemPtr bew() const;
-    void setBew(BewAppItemPtr newBew);
+    BEWAppItemPtr bew() const;
+    void setBEW(BEWAppItemPtr newBEW);
 
 Q_SIGNALS:
-    void refreshRequest(const BewAppItemPtr &from);
+    void refreshRequest(const BEWAppItemPtr &from);
 
 protected:
     void paintEvent(QPaintEvent *e) Q_DECL_OVERRIDE;
@@ -33,8 +33,8 @@ private Q_SLOTS:
     void on_installBtn_clicked();
 
 private:
-    Ui::BewStoreItemWidget *ui;
-    BewAppItemPtr mBew;
+    Ui::BEWStoreItemWidget *ui;
+    BEWAppItemPtr mBEW;
     bool mContainsMouse = false;
 };
 

@@ -7,38 +7,38 @@
 #include <QPainter>
 #include <QPainterPath>
 
-BewStoreItemWidget::BewStoreItemWidget(QWidget *parent)
+BEWStoreItemWidget::BEWStoreItemWidget(QWidget *parent)
     : QWidget(parent)
-    , ui(new Ui::BewStoreItemWidget)
+    , ui(new Ui::BEWStoreItemWidget)
 {
     ui->setupUi(this);
 }
 
-BewStoreItemWidget::~BewStoreItemWidget()
+BEWStoreItemWidget::~BEWStoreItemWidget()
 {
     delete ui;
 }
 
-BewAppItemPtr BewStoreItemWidget::bew() const
+BEWAppItemPtr BEWStoreItemWidget::bew() const
 {
-    return mBew;
+    return mBEW;
 }
 
-void BewStoreItemWidget::setBew(BewAppItemPtr newBew)
+void BEWStoreItemWidget::setBEW(BEWAppItemPtr newBEW)
 {
-    mBew = newBew;
-    if (mBew)
+    mBEW = newBEW;
+    if (mBEW)
     {
-        auto url = mBew->url();
+        auto url = mBEW->url();
         if (url.length() > 33)
             url = url.left(30) + "...";
 
-        QImage img(mBew->iconUrl());
-        ui->title->setText(mBew->title());
+        QImage img(mBEW->iconUrl());
+        ui->title->setText(mBEW->title());
         ui->url->setText(url);
         ui->image->setPixmap( QPixmap::fromImage(img.scaled(64,64,Qt::KeepAspectRatio,Qt::SmoothTransformation)) );
 
-        const auto installed = mBew->isInstalled();
+        const auto installed = mBEW->isInstalled();
         ui->installBtn->setVisible(!installed);
         ui->openBtn->setVisible(installed);
     }
@@ -50,7 +50,7 @@ void BewStoreItemWidget::setBew(BewAppItemPtr newBew)
     }
 }
 
-void BewStoreItemWidget::paintEvent(QPaintEvent *)
+void BEWStoreItemWidget::paintEvent(QPaintEvent *)
 {
     QPainter painter(this);
     if (mContainsMouse)
@@ -67,38 +67,38 @@ void BewStoreItemWidget::paintEvent(QPaintEvent *)
         painter.fillRect(rect(), QColor(0,0,0,0));
 }
 
-void BewStoreItemWidget::enterEvent(QEvent *)
+void BEWStoreItemWidget::enterEvent(QEvent *)
 {
     mContainsMouse = true;
     update();
 }
 
-void BewStoreItemWidget::leaveEvent(QEvent *)
+void BEWStoreItemWidget::leaveEvent(QEvent *)
 {
     mContainsMouse = false;
     update();
 }
 
-void BewStoreItemWidget::mouseReleaseEvent(QMouseEvent *)
+void BEWStoreItemWidget::mouseReleaseEvent(QMouseEvent *)
 {
     AddDialog dlg;
-    dlg.restoreBew(mBew);
-    connect(&dlg, &AddDialog::refreshRequest, this, &BewStoreItemWidget::refreshRequest);
+    dlg.restoreBEW(mBEW);
+    connect(&dlg, &AddDialog::refreshRequest, this, &BEWStoreItemWidget::refreshRequest);
     dlg.exec();
 }
 
-void BewStoreItemWidget::on_openBtn_clicked()
+void BEWStoreItemWidget::on_openBtn_clicked()
 {
-    mBew->launch();
+    mBEW->launch();
 }
 
 
-void BewStoreItemWidget::on_installBtn_clicked()
+void BEWStoreItemWidget::on_installBtn_clicked()
 {
-    if (mBew->install())
+    if (mBEW->install())
     {
-        QMessageBox::information(this, "Done", QString("Your Bew installed successfully at \"%1\".\nYou can find it at application menu.").arg(BewAppItem::applicationsPath()));
-        Q_EMIT refreshRequest(mBew);
+        QMessageBox::information(this, "Done", QString("Your BEW installed successfully at \"%1\".\nYou can find it at application menu.").arg(BEWAppItem::applicationsPath()));
+        Q_EMIT refreshRequest(mBEW);
     }
 }
 

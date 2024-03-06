@@ -5,16 +5,16 @@
 
 #include "bewappitem.h"
 
-class BewStoreEngine : public QObject
+class BEWStoreEngine : public QObject
 {
     Q_OBJECT
 public:
-    BewStoreEngine(QObject *parent = nullptr);
-    virtual ~BewStoreEngine();
+    BEWStoreEngine(QObject *parent = nullptr);
+    virtual ~BEWStoreEngine();
 
-    void refreshInstalleds(std::function<void(const QList<BewAppItemPtr> &)> callback);
-    void refreshStore(std::function<void(const QList<BewAppItemPtr> &)> callback);
-    static void sort(QList<BewAppItemPtr> &list);
+    void refreshInstalleds(std::function<void(const QList<BEWAppItemPtr> &)> callback);
+    void refreshStore(std::function<void(const QList<BEWAppItemPtr> &)> callback);
+    static void sort(QList<BEWAppItemPtr> &list);
 };
 
 #endif // BEWSTOREENGINE_H

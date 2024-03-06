@@ -7,22 +7,22 @@
 
 #include <QPalette>
 
-BewStore::BewStore(QWidget *parent)
+BEWStore::BEWStore(QWidget *parent)
     : QMainWindow(parent)
-    , ui(new Ui::BewStore)
+    , ui(new Ui::BEWStore)
 {
     ui->setupUi(this);
     ui->progressBar->hide();
     ui->no_installed_bew->hide();
     ui->no_store_bew->hide();
 
-    mEngine = new BewStoreEngine(this);
+    mEngine = new BEWStoreEngine(this);
 
     mRefreshTimer = new QTimer(this);
     mRefreshTimer->setInterval(300);
     mRefreshTimer->setSingleShot(true);
 
-    connect(mRefreshTimer, &QTimer::timeout, this, &BewStore::reload);
+    connect(mRefreshTimer, &QTimer::timeout, this, &BEWStore::reload);
 
     mSearchLine = new QLineEdit;
     mSearchLine->setFixedWidth(350);
@@ -45,12 +45,12 @@ BewStore::BewStore(QWidget *parent)
     ui->toolBar->addAction(ui->actionDonate);
 }
 
-BewStore::~BewStore()
+BEWStore::~BEWStore()
 {
     delete ui;
 }
 
-void BewStore::reload()
+void BEWStore::reload()
 {
     QLayoutItem *child;
     while ((child = ui->storeGrid->takeAt(0)) != nullptr)
@@ -68,16 +68,16 @@ void BewStore::reload()
     const int columnsCount = 3;
 
     int installedIdx = 0;
-    for (const auto &bew: mInstalledBews)
+    for (const auto &bew: mInstalledBEWs)
     {
         if (keyword.length() && !bew->title().toLower().remove(' ').contains(keyword))
             continue;
         if (!bew->isInstalled())
             continue;
 
-        auto item = new BewStoreItemWidget;
-        item->setBew(bew);
-        connect(item, &BewStoreItemWidget::refreshRequest, this, &BewStore::refreshRequest);
+        auto item = new BEWStoreItemWidget;
+        item->setBEW(bew);
+        connect(item, &BEWStoreItemWidget::refreshRequest, this, &BEWStore::refreshRequest);
 
         ui->installedsGrid->addWidget(item, installedIdx/columnsCount, installedIdx%columnsCount);
         installedIdx++;
@@ -85,16 +85,16 @@ void BewStore::reload()
     ui->no_installed_bew->setVisible(ui->installedsGrid->count() == 0);
 
     int storeIdx = 0;
-    for (const auto &bew: mStoreBews)
+    for (const auto &bew: mStoreBEWs)
     {
         if (keyword.length() && !bew->title().toLower().remove(' ').contains(keyword))
             continue;
         if (bew->isInstalled())
             continue;
 
-        auto item = new BewStoreItemWidget;
-        item->setBew(bew);
-        connect(item, &BewStoreItemWidget::refreshRequest, this, &BewStore::refreshRequest);
+        auto item = new BEWStoreItemWidget;
+        item->setBEW(bew);
+        connect(item, &BEWStoreItemWidget::refreshRequest, this, &BEWStore::refreshRequest);
 
         ui->storeGrid->addWidget(item, storeIdx/columnsCount, storeIdx%columnsCount);
         storeIdx++;
@@ -102,18 +102,18 @@ void BewStore::reload()
     ui->no_store_bew->setVisible(ui->storeGrid->count() == 0);
 }
 
-void BewStore::refresh()
+void BEWStore::refresh()
 {
-    mInstalledBews.clear();
-    mStoreBews.clear();
+    mInstalledBEWs.clear();
+    mStoreBEWs.clear();
     reload();
 
     mLoadingsCount = 2;
     ui->progressBar->show();
     ui->store->hide();
 
-    mEngine->refreshInstalleds([this](const QList<BewAppItemPtr> &items){
-        mInstalledBews = items;
+    mEngine->refreshInstalleds([this](const QList<BEWAppItemPtr> &items){
+        mInstalledBEWs = items;
         reload();
 
         mLoadingsCount--;
@@ -125,8 +125,8 @@ void BewStore::refresh()
         }
     });
 
-    mEngine->refreshStore([this](const QList<BewAppItemPtr> &items){
-        mStoreBews = items;
+    mEngine->refreshStore([this](const QList<BEWAppItemPtr> &items){
+        mStoreBEWs = items;
         reload();
 
         mLoadingsCount--;
@@ -139,39 +139,39 @@ void BewStore::refresh()
     });
 }
 
-void BewStore::on_actionAdd_triggered()
+void BEWStore::on_actionAdd_triggered()
 {
     AddDialog add;
-    connect(&add, &AddDialog::refreshRequest, this, &BewStore::refreshRequest);
+    connect(&add, &AddDialog::refreshRequest, this, &BEWStore::refreshRequest);
     add.exec();
 }
 
-void BewStore::refreshRequest(const BewAppItemPtr &from)
+void BEWStore::refreshRequest(const BEWAppItemPtr &from)
 {
-    mStoreBews.removeAll(from);
-    mInstalledBews.removeAll(from);
+    mStoreBEWs.removeAll(from);
+    mInstalledBEWs.removeAll(from);
 
     if (from->isInstalled())
     {
-        mInstalledBews.append(from);
-        BewStoreEngine::sort(mInstalledBews);
+        mInstalledBEWs.append(from);
+        BEWStoreEngine::sort(mInstalledBEWs);
     }
     else
     {
-        mStoreBews.append(from);
-        BewStoreEngine::sort(mStoreBews);
+        mStoreBEWs.append(from);
+        BEWStoreEngine::sort(mStoreBEWs);
     }
 
-    QMetaObject::invokeMethod(this, &BewStore::reload, Qt::QueuedConnection);
+    QMetaObject::invokeMethod(this, &BEWStore::reload, Qt::QueuedConnection);
 }
 
-void BewStore::on_actionSettings_triggered()
+void BEWStore::on_actionSettings_triggered()
 {
     SettingsDialog settings;
     settings.exec();
 }
 
-void BewStore::on_actionDonate_triggered()
+void BEWStore::on_actionDonate_triggered()
 {
     DonateDialog donate;
     donate.exec();

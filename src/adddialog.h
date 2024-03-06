@@ -15,10 +15,10 @@ public:
 
 public Q_SLOTS:
     virtual void accept();
-    void restoreBew(BewAppItemPtr item);
+    void restoreBEW(BEWAppItemPtr item);
 
 Q_SIGNALS:
-    void refreshRequest(const BewAppItemPtr &from);
+    void refreshRequest(const BEWAppItemPtr &from);
 
 private Q_SLOTS:
     void on_cancelBtn_clicked();
@@ -29,7 +29,7 @@ private Q_SLOTS:
     void on_saveBtn_clicked();
 
 protected:
-    BewAppItemPtr generateBew() const;
+    BEWAppItemPtr generateBEW() const;
 
 private:
     void checkSaveBtn();
@@ -37,7 +37,7 @@ private:
 
 private:
     Ui::AddDialog ui;
-    BewAppItemPtr mRestoreBew;
+    BEWAppItemPtr mRestoreBEW;
 };
 
 #endif // ADDDIALOG_H

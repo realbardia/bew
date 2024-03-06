@@ -33,7 +33,7 @@ void AddDialog::accept()
 {
 }
 
-void AddDialog::restoreBew(BewAppItemPtr item)
+void AddDialog::restoreBEW(BEWAppItemPtr item)
 {
     ui.website->setReadOnly(true);
     ui.title->setReadOnly(true);
@@ -64,7 +64,7 @@ void AddDialog::restoreBew(BewAppItemPtr item)
         ui.proxyPass->setText(proxy.pass);
     }
 
-    mRestoreBew = item;
+    mRestoreBEW = item;
 }
 
 void AddDialog::checkSaveBtn()
@@ -94,32 +94,32 @@ void AddDialog::on_cancelBtn_clicked()
 
 void AddDialog::on_uninstallBtn_clicked()
 {
-    if (!mRestoreBew)
+    if (!mRestoreBEW)
         return;
 
     auto resp = QMessageBox::warning(this, "Uninstall", QString("Are you sure about uninstall \"%1\" bew?").arg(ui.title->text()), QMessageBox::Button::Yes|QMessageBox::Button::Cancel);
     if (resp == QMessageBox::Cancel)
         return;
 
-    mRestoreBew->uninstall();
-    Q_EMIT refreshRequest(mRestoreBew);
+    mRestoreBEW->uninstall();
+    Q_EMIT refreshRequest(mRestoreBEW);
     close();
 }
 
 void AddDialog::on_installBtn_clicked()
 {
-    auto item = generateBew();
+    auto item = generateBEW();
     if (item->install())
     {
         Q_EMIT refreshRequest(item);
-        QMessageBox::information(this, "Done", QString("Your Bew installed successfully at \"%1\".\nYou can find it at application menu.").arg(BewAppItem::applicationsPath()));
+        QMessageBox::information(this, "Done", QString("Your BEW installed successfully at \"%1\".\nYou can find it at application menu.").arg(BEWAppItem::applicationsPath()));
         close();
     }
 }
 
-BewAppItemPtr AddDialog::generateBew() const
+BEWAppItemPtr AddDialog::generateBEW() const
 {
-    auto item = BewAppItemPtr::create();
+    auto item = BEWAppItemPtr::create();
     item->setUrl(ui.website->text());
     item->setTitle(ui.title->text());
     item->setIconUrl(ui.icon->text());
@@ -131,7 +131,7 @@ BewAppItemPtr AddDialog::generateBew() const
 
     if (ui.proxyGroup->isChecked())
     {
-        BewAppItem::Proxy proxy;
+        BEWAppItem::Proxy proxy;
         proxy.type = ui.proxyType->currentText();
 
         if (ui.proxyHost->text().length())
@@ -149,24 +149,24 @@ BewAppItemPtr AddDialog::generateBew() const
 
 void AddDialog::on_shareBtn_clicked()
 {
-    BewShareDialog share;
-    share.setJson( QString::fromUtf8(QJsonDocument(generateBew()->toJson()).toJson()) );
+    BEWShareDialog share;
+    share.setJson( QString::fromUtf8(QJsonDocument(generateBEW()->toJson()).toJson()) );
     share.exec();
 }
 
 void AddDialog::on_saveBtn_clicked()
 {
-    if (!mRestoreBew)
+    if (!mRestoreBEW)
         return;
 
-    mRestoreBew->uninstall();
-    Q_EMIT refreshRequest(mRestoreBew);
+    mRestoreBEW->uninstall();
+    Q_EMIT refreshRequest(mRestoreBEW);
 
-    auto item = generateBew();
+    auto item = generateBEW();
     if (item->install())
     {
         Q_EMIT refreshRequest(item);
-        QMessageBox::information(this, "Save", QString("Your changes saved successfully at \"%1\".").arg(BewAppItem::applicationsPath()));
+        QMessageBox::information(this, "Save", QString("Your changes saved successfully at \"%1\".").arg(BEWAppItem::applicationsPath()));
         close();
     }
 }

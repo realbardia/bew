@@ -14,54 +14,54 @@
 #include <QBuffer>
 #include <QKeyEvent>
 
-QString Bew::mUserAgent = BEW_DEFAULT_USER_AGENT;
+QString BEW::mUserAgent = BEW_DEFAULT_USER_AGENT;
 
-Bew::Bew(QWidget *parent)
+BEW::BEW(QWidget *parent)
     : QMainWindow(parent),
       mInstanceServer(Q_NULLPTR),
       mSysTray(Q_NULLPTR)
 {
     QWebEngineSettings::defaultSettings()->setAttribute(QWebEngineSettings::PluginsEnabled, true);
 
-    mWeb = new BewWebView;
+    mWeb = new BEWWebView;
     mWeb->setContextMenuPolicy(Qt::CustomContextMenu);
 
-    connect(mWeb->page()->profile(), &QWebEngineProfile::downloadRequested, this, &Bew::downloadRequested);
+    connect(mWeb->page()->profile(), &QWebEngineProfile::downloadRequested, this, &BEW::downloadRequested);
 
-    connect(mWeb, &QWebEngineView::urlChanged, this, &Bew::webViewUrlChanged);
-    connect(mWeb, &QWebEngineView::iconChanged, this, &Bew::webViewIconChanged);
-    connect(mWeb, &QWebEngineView::customContextMenuRequested, this, &Bew::webViewCustomContextMenuRequested);
+    connect(mWeb, &QWebEngineView::urlChanged, this, &BEW::webViewUrlChanged);
+    connect(mWeb, &QWebEngineView::iconChanged, this, &BEW::webViewIconChanged);
+    connect(mWeb, &QWebEngineView::customContextMenuRequested, this, &BEW::webViewCustomContextMenuRequested);
 
     setCentralWidget(mWeb);
     resize(1000, 600);
     restore();
 }
 
-Bew::~Bew()
+BEW::~BEW()
 {
     save();
 }
 
-void Bew::setFonts(const QString &font)
+void BEW::setFonts(const QString &font)
 {
     mWeb->settings()->setFontFamily(QWebEngineSettings::StandardFont, font);
 }
 
-void Bew::load(const QString &url)
+void BEW::load(const QString &url)
 {
     mWeb->load(QUrl(url));
 }
 
-void Bew::webViewUrlChanged(const QUrl &)
+void BEW::webViewUrlChanged(const QUrl &)
 {
 }
 
-void Bew::webViewIconChanged(const QIcon &arg1)
+void BEW::webViewIconChanged(const QIcon &arg1)
 {
     setWindowIcon(arg1);
 }
 
-void Bew::webViewCustomContextMenuRequested(const QPoint &)
+void BEW::webViewCustomContextMenuRequested(const QPoint &)
 {
     auto page = mWeb->page();
     if (!page)
@@ -119,7 +119,7 @@ void Bew::webViewCustomContextMenuRequested(const QPoint &)
     menu->show();
 }
 
-QString Bew::homePath()
+QString BEW::homePath()
 {
     QString path;
 #ifdef Q_OS_WIN
@@ -132,9 +132,9 @@ QString Bew::homePath()
     return path;
 }
 
-void Bew::restore()
+void BEW::restore()
 {
-    QFile file(Bew::homePath() + "/window-geometry.dat");
+    QFile file(BEW::homePath() + "/window-geometry.dat");
     if (!file.open(QFile::ReadOnly))
         return;
 
@@ -142,9 +142,9 @@ void Bew::restore()
     file.close();
 }
 
-void Bew::save()
+void BEW::save()
 {
-    QFile file(Bew::homePath() + "/window-geometry.dat");
+    QFile file(BEW::homePath() + "/window-geometry.dat");
     if (!file.open(QFile::WriteOnly))
         return;
 
@@ -152,7 +152,7 @@ void Bew::save()
     file.close();
 }
 
-void Bew::keyPressEvent(QKeyEvent *e)
+void BEW::keyPressEvent(QKeyEvent *e)
 {
     if (e->modifiers() & Qt::ControlModifier)
     {
@@ -161,12 +161,12 @@ void Bew::keyPressEvent(QKeyEvent *e)
     }
 }
 
-QString Bew::userAgent()
+QString BEW::userAgent()
 {
     return mUserAgent;
 }
 
-QString Bew::instancePath()
+QString BEW::instancePath()
 {
     QByteArray bytes;
     QDataStream stream(&bytes, QIODevice::WriteOnly);
@@ -178,16 +178,16 @@ QString Bew::instancePath()
     return res;
 }
 
-void Bew::setUserAgent(const QString &userAgent)
+void BEW::setUserAgent(const QString &userAgent)
 {
     mUserAgent = userAgent;
 }
 
-bool Bew::showInstance()
+bool BEW::showInstance()
 {
     qRegisterMetaType<QLocalSocket::LocalSocketError>("QLocalSocket::LocalSocketError");
 
-    auto path = Bew::instancePath();
+    auto path = BEW::instancePath();
     auto socket = new QLocalSocket;
 
     QEventLoop loop;
@@ -212,7 +212,7 @@ bool Bew::showInstance()
     return !error;
 }
 
-void Bew::downloadRequested(QWebEngineDownloadItem *download)
+void BEW::downloadRequested(QWebEngineDownloadItem *download)
 {
     QString url = download->url().toString() + download->downloadFileName();
 
@@ -232,12 +232,12 @@ void Bew::downloadRequested(QWebEngineDownloadItem *download)
     download->accept();
 }
 
-void Bew::setScrollBar(bool state)
+void BEW::setScrollBar(bool state)
 {
     mWeb->settings()->setAttribute(QWebEngineSettings::ShowScrollBars, state);
 }
 
-void Bew::setSystemTray(bool state)
+void BEW::setSystemTray(bool state)
 {
     if ((mSysTray != Q_NULLPTR) == state)
         return;
@@ -266,7 +266,7 @@ void Bew::setSystemTray(bool state)
     }
 }
 
-void Bew::setSingleInstance(bool state)
+void BEW::setSingleInstance(bool state)
 {
     if ((mInstanceServer != Q_NULLPTR) == state)
         return;
@@ -275,7 +275,7 @@ void Bew::setSingleInstance(bool state)
         delete mInstanceServer;
         mInstanceServer = Q_NULLPTR;
     } else {
-        auto path = Bew::instancePath();
+        auto path = BEW::instancePath();
         QLocalServer::removeServer(path);
 
         mInstanceServer = new QLocalServer(this);

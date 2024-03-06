@@ -3,12 +3,12 @@
 
 #include <QWebEngineView>
 
-class BewWebView : public QWebEngineView
+class BEWWebView : public QWebEngineView
 {
     Q_OBJECT
 public:
-    BewWebView(QWidget *parent = nullptr);
-    virtual ~BewWebView();
+    BEWWebView(QWidget *parent = nullptr);
+    virtual ~BEWWebView();
 
 private:
     QString featureToString(QWebEnginePage::Feature);

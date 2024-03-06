@@ -9,12 +9,12 @@
 #include <QWebEngineProfile>
 #include <QSystemTrayIcon>
 
-class Bew : public QMainWindow
+class BEW : public QMainWindow
 {
     Q_OBJECT
 public:
-    Bew(QWidget *parent = nullptr);
-    ~Bew();
+    BEW(QWidget *parent = nullptr);
+    ~BEW();
 
     void setFonts(const QString &font);
     void downloadRequested(QWebEngineDownloadItem *download);
@@ -43,7 +43,7 @@ protected:
     void keyPressEvent(QKeyEvent *event);
 
 private:
-    BewWebView *mWeb;
+    BEWWebView *mWeb;
     QLocalServer *mInstanceServer;
     QSystemTrayIcon *mSysTray;
 
