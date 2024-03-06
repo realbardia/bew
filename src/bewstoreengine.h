@@ -14,6 +14,7 @@ public:
 
     void refreshInstalleds(std::function<void(const QList<BewAppItemPtr> &)> callback);
     void refreshStore(std::function<void(const QList<BewAppItemPtr> &)> callback);
+    static void sort(QList<BewAppItemPtr> &list);
 };
 
 #endif // BEWSTOREENGINE_H

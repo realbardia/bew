@@ -2,4 +2,7 @@
     <qresource prefix="/bew/templates">
         <file>template.desktop</file>
     </qresource>
+    <qresource prefix="/icons">
+        <file>bew.png</file>
+    </qresource>
 </RCC>

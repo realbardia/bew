@@ -29,6 +29,7 @@ public Q_SLOTS:
 private Q_SLOTS:
     void on_actionAdd_triggered();
     void on_actionSettings_triggered();
+    void on_actionDonate_triggered();
 
 protected:
     void refreshRequest(const BewAppItemPtr &from);

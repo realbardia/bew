@@ -3,6 +3,7 @@
 #include "bewstoreitemwidget.h"
 #include "ui_bewstore.h"
 #include "settingsdialog.h"
+#include "donatedialog.h"
 
 #include <QPalette>
 
@@ -81,7 +82,7 @@ void BewStore::reload()
         ui->installedsGrid->addWidget(item, installedIdx/columnsCount, installedIdx%columnsCount);
         installedIdx++;
     }
-    ui->no_installed_bew->setVisible(mInstalledBews.isEmpty());
+    ui->no_installed_bew->setVisible(ui->installedsGrid->count() == 0);
 
     int storeIdx = 0;
     for (const auto &bew: mStoreBews)
@@ -98,7 +99,7 @@ void BewStore::reload()
         ui->storeGrid->addWidget(item, storeIdx/columnsCount, storeIdx%columnsCount);
         storeIdx++;
     }
-    ui->no_store_bew->setVisible(mStoreBews.isEmpty());
+    ui->no_store_bew->setVisible(ui->storeGrid->count() == 0);
 }
 
 void BewStore::refresh()
@@ -151,9 +152,15 @@ void BewStore::refreshRequest(const BewAppItemPtr &from)
     mInstalledBews.removeAll(from);
 
     if (from->isInstalled())
+    {
         mInstalledBews.append(from);
+        BewStoreEngine::sort(mInstalledBews);
+    }
     else
+    {
         mStoreBews.append(from);
+        BewStoreEngine::sort(mStoreBews);
+    }
 
     QMetaObject::invokeMethod(this, &BewStore::reload, Qt::QueuedConnection);
 }
@@ -162,5 +169,11 @@ void BewStore::on_actionSettings_triggered()
 {
     SettingsDialog settings;
     settings.exec();
+}
+
+void BewStore::on_actionDonate_triggered()
+{
+    DonateDialog donate;
+    donate.exec();
 }
 

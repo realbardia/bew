@@ -15,6 +15,8 @@ public:
     explicit SettingsDialog(QWidget *parent = nullptr);
     ~SettingsDialog();
 
+    static void configureProxy();
+
 public Q_SLOTS:
     void accept() Q_DECL_OVERRIDE;
 

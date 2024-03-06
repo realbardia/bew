@@ -64,7 +64,7 @@ void BewStoreItemWidget::paintEvent(QPaintEvent *)
         painter.fillPath(path, color);
     }
     else
-        painter.eraseRect(rect());
+        painter.fillRect(rect(), QColor(0,0,0,0));
 }
 
 void BewStoreItemWidget::enterEvent(QEvent *)

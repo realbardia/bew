@@ -13,6 +13,7 @@ FILE(GLOB SOURCES
         bewwebview.cpp bewwebview.h
         commandparser.cpp commandparser.h
         settingsdialog.cpp settingsdialog.h settingsdialog.ui
+        donatedialog.h donatedialog.cpp donatedialog.ui
 )
 
 set(PROJECT_SOURCES
