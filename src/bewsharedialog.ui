@@ -17,7 +17,7 @@
    <item>
     <widget class="QLabel" name="label">
      <property name="text">
-      <string>To share this BEW Application send below json text to the below Github projects as a issue or pull request.</string>
+      <string>To share this BEW Application send below json text to the below Github projects as an issue or pull request.</string>
      </property>
      <property name="wordWrap">
       <bool>true</bool>
