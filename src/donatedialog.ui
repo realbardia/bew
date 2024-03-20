@@ -17,7 +17,7 @@
    <item>
     <widget class="QLabel" name="label">
      <property name="text">
-      <string>BEW is a free and open-source software released under the GPLv3 License. So your donation will help developers of the BEW to add new features and supports more platforms in the future.</string>
+      <string>BEW is a free and open-source software released under the GPLv3 License. Your donation will help developers of the BEW to add new features and support more platforms in the future.</string>
      </property>
      <property name="alignment">
       <set>Qt::AlignCenter</set>
