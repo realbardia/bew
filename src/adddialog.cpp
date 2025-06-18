@@ -142,6 +142,8 @@ BEWAppItemPtr AddDialog::generateBEW() const
             proxy.user = ui.proxyUser->text();
         if (ui.proxyPass->text().length())
             proxy.pass = ui.proxyPass->text();
+
+        item->setProxy(proxy);
     }
 
     return item;

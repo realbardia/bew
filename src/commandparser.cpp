@@ -115,10 +115,10 @@ std::optional<QNetworkProxy> CommandParser::Result::proxy() const
     if (host.length() || proxyType.length() || proxyPort)
     {
         auto proxyTypeEnum = [this]() -> QNetworkProxy::ProxyType {
-            if (proxyType == "noproxy")
+            if (proxyType.toLower() == "noproxy")
                 return QNetworkProxy::NoProxy;
             else
-            if (proxyType == "socks")
+            if (proxyType.toLower() == "socks")
                 return QNetworkProxy::Socks5Proxy;
             else
                 return QNetworkProxy::HttpProxy;
