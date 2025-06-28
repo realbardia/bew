@@ -2,12 +2,14 @@
 #define BEW_H
 
 #include "bewwebview.h"
+#include "bewmessagewidget.h"
 
 #include <QLocalServer>
 #include <QMainWindow>
 #include <QWebEngineContextMenuData>
 #include <QWebEngineProfile>
 #include <QSystemTrayIcon>
+#include <QLabel>
 
 class BEW : public QMainWindow
 {
@@ -29,6 +31,12 @@ public:
     static void setUserAgent(const QString &userAgent);
     static bool showInstance();
 
+    QString message() const;
+    void setMessage(const QString &newMessage);
+
+    qint32 messageIdleMinutes() const;
+    void setMessageIdleMinutes(qint32 newMessageIdleMinutes);
+
 public Q_SLOTS:
     void load(const QString &url);
 
@@ -44,6 +52,7 @@ protected:
 
 private:
     BEWWebView *mWeb;
+    BewMessageWidget *mMessage;
     QLocalServer *mInstanceServer;
     QSystemTrayIcon *mSysTray;
 

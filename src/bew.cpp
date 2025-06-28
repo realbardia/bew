@@ -32,7 +32,21 @@ BEW::BEW(QWidget *parent)
     connect(mWeb, &QWebEngineView::iconChanged, this, &BEW::webViewIconChanged);
     connect(mWeb, &QWebEngineView::customContextMenuRequested, this, &BEW::webViewCustomContextMenuRequested);
 
-    setCentralWidget(mWeb);
+    mMessage = new BewMessageWidget;
+    mMessage->hide();
+
+    connect(mMessage, &BewMessageWidget::activatedChanged, this, [this](bool mActivated){
+        mMessage->setVisible(mActivated);
+        mWeb->setVisible(!mActivated);
+    });
+
+    auto widget = new QWidget;
+    auto layout = new QVBoxLayout(widget);
+    layout->setContentsMargins(0,0,0,0);
+    layout->addWidget(mWeb);
+    layout->addWidget(mMessage);
+
+    setCentralWidget(widget);
     resize(1000, 600);
     restore();
 }
@@ -159,6 +173,16 @@ void BEW::keyPressEvent(QKeyEvent *e)
         if (e->key() == Qt::Key_Q)
             QCoreApplication::quit();
     }
+}
+
+void BEW::setMessageIdleMinutes(qint32 newMessageIdleMinutes)
+{
+    mMessage->setMessageIdleMinutes(newMessageIdleMinutes);
+}
+
+void BEW::setMessage(const QString &newMessage)
+{
+    mMessage->setMessage(newMessage);
 }
 
 QString BEW::userAgent()

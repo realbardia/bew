@@ -14,6 +14,7 @@ FILE(GLOB SOURCES
         commandparser.cpp commandparser.h
         settingsdialog.cpp settingsdialog.h settingsdialog.ui
         donatedialog.h donatedialog.cpp donatedialog.ui
+        bewmessagewidget.h bewmessagewidget.cpp bewmessagewidget.ui
 )
 
 set(PROJECT_SOURCES

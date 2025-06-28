@@ -66,6 +66,8 @@ CommandParser::Result CommandParser::parse(const QStringList &arguments)
     QCommandLineOption proxyTypeOption("proxy-type", "Set proxy type (http|socks|noproxy).", "type");
     QCommandLineOption proxyUserOption("proxy-username", "Set proxy username <username>.", "username");
     QCommandLineOption proxyPassOption("proxy-password", "Set proxy password <password>.", "password");
+    QCommandLineOption messageOption("message", "String to show <message>.", "message");
+    QCommandLineOption messageIdleMinutesOption("message-idle-minutes", "Idle time to show message after <minutes>.", "minutes");
 
     parser.addOption(titleOption);
     parser.addOption(iconOption);
@@ -80,6 +82,9 @@ CommandParser::Result CommandParser::parse(const QStringList &arguments)
     parser.addOption(proxyTypeOption);
     parser.addOption(proxyUserOption);
     parser.addOption(proxyPassOption);
+
+    parser.addOption(messageOption);
+    parser.addOption(messageIdleMinutesOption);
 
     parser.parse(arguments);
 
@@ -105,6 +110,10 @@ CommandParser::Result CommandParser::parse(const QStringList &arguments)
     res.proxyPort = parser.value(proxyPortOption).toInt();
     res.proxyUser = parser.value(proxyUserOption);
     res.proxyPass = parser.value(proxyPassOption);
+
+    res.message = parser.value(messageOption);
+    res.messageIdleMinutes = parser.value(messageIdleMinutesOption).toInt();
+    res.messageEnabled = !res.message.isEmpty();
 
     return res;
 }

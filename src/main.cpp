@@ -207,6 +207,11 @@ int main(int argc, char *argv[])
     if (parse.noScroll) bew.setScrollBar(false);
     if (parse.systray) bew.setSystemTray(true);
     if (parse.singleInstance) bew.setSingleInstance(true);
+    if (parse.messageEnabled)
+    {
+        bew.setMessage(parse.message);
+        bew.setMessageIdleMinutes(parse.messageIdleMinutes);
+    }
 
     bew.load(parse.url);
     bew.show();

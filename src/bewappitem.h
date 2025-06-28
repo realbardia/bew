@@ -64,6 +64,15 @@ public:
     QJsonObject toJson() const;
     bool fromJson(const QJsonObject &json);
 
+    QString message() const;
+    void setMessage(const QString &newMessage);
+
+    qint32 messageIdleMinutes() const;
+    void setMessageIdleMinutes(qint32 newMessageIdleMinutes);
+
+    bool messageEnabled() const;
+    void setMessageEnabled(bool newMessageEnabled);
+
 protected:
     bool storeIcon(const QByteArray &iconBytes);
     QByteArray restoreIcon() const;
@@ -77,6 +86,10 @@ private:
     bool mScrollBar = true;
     bool mSingleInstance = false;
     bool mSystemTray = false;
+
+    QString mMessage;
+    qint32 mMessageIdleMinutes = 0;
+    bool mMessageEnabled = false;
 
     std::optional<Proxy> mProxy;
 };

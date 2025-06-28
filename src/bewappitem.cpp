@@ -228,6 +228,12 @@ bool BEWAppItem::install()
             command += " --proxy-password \"" + proxy.pass + "\"";
     }
 
+    if (mMessageEnabled)
+    {
+        command += " --message \"" + mMessage + "\"";
+        command += " --message-idle-minutes " + QString::number(mMessageIdleMinutes);
+    }
+
     data.replace("%command%", command);
     data.replace("%icon%", mIconUrl);
     data.replace("%name%", mTitle);
@@ -353,4 +359,34 @@ QByteArray BEWAppItem::restoreIcon() const
         QFile::remove(url);
 
     return res;
+}
+
+bool BEWAppItem::messageEnabled() const
+{
+    return mMessageEnabled;
+}
+
+void BEWAppItem::setMessageEnabled(bool newMessageEnabled)
+{
+    mMessageEnabled = newMessageEnabled;
+}
+
+qint32 BEWAppItem::messageIdleMinutes() const
+{
+    return mMessageIdleMinutes;
+}
+
+void BEWAppItem::setMessageIdleMinutes(qint32 newMessageIdleMinutes)
+{
+    mMessageIdleMinutes = newMessageIdleMinutes;
+}
+
+QString BEWAppItem::message() const
+{
+    return mMessage;
+}
+
+void BEWAppItem::setMessage(const QString &newMessage)
+{
+    mMessage = newMessage;
 }

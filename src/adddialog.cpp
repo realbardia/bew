@@ -52,6 +52,10 @@ void AddDialog::restoreBEW(BEWAppItemPtr item)
     ui.useragent->setText(item->userAgent());
     ui.font->setCurrentText(item->fontFamily());
 
+    ui.messageGroup->setChecked(item->messageEnabled());
+    ui.message->setText(item->message());
+    ui.messageIdleMins->setValue(item->messageIdleMinutes());
+
     if (item->proxy().has_value())
     {
         ui.proxyGroup->setChecked(true);
@@ -128,6 +132,9 @@ BEWAppItemPtr AddDialog::generateBEW() const
     item->setSystemTray(ui.systemTray->isChecked());
     item->setFontFamily(ui.font->currentText());
     item->setUserAgent(ui.useragent->text());
+    item->setMessageEnabled(ui.messageGroup->isChecked());
+    item->setMessage(ui.message->text());
+    item->setMessageIdleMinutes(ui.messageIdleMins->value());
 
     if (ui.proxyGroup->isChecked())
     {

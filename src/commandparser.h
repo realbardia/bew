@@ -31,6 +31,10 @@ public:
         QString proxyUser;
         QString proxyPass;
 
+        QString message;
+        qint32 messageIdleMinutes = 0;
+        bool messageEnabled = false;
+
         std::optional<QNetworkProxy> proxy() const;
     };
 
